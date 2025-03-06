@@ -16,7 +16,6 @@ def load_data(file_path):
             labels.extend(data["sender_labels"])
     return messages, np.array(labels)
 
-
 train_file = "mod-train.jsonl"
 val_file = "mod-validation.jsonl"
 test_file = "mod-test.jsonl"
@@ -27,14 +26,15 @@ X_test, y_test = load_data(test_file)
 
 
 
-vectorizer = TfidfVectorizer()#实例化了一个 TfidfVectorizer 对象
+vectorizer = TfidfVectorizer()
+#实例化了一个 TfidfVectorizer 对象
 X_train_tfidf = vectorizer.fit_transform(X_train)#1.建立词汇表；2.把每个文本转换为对应的 TF-IDF 特征向量
 X_val_tfidf = vectorizer.transform(X_val)#这两行代码使用之前在训练数据上已经拟合好的 vectorizer（即已经建立好的词汇表），对验证集文本数据 X_val 和测试集文本数据 X_test 进行转换，将它们也转换为 TF-IDF 特征向量，分别存储在 X_val_tfidf 和 X_test_tfidf 中
 X_test_tfidf = vectorizer.transform(X_test)
 
 print(X_test_tfidf)
 
-model = LogisticRegression(solver='saga', penalty=None, max_iter=1000)
+model = LogisticRegression(penalty = 'l2', solver='saga', max_iter=1000)
 
 
 model.fit(X_train_tfidf, y_train)
